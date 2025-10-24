@@ -6,9 +6,15 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:status": "supabase status",
+    "supabase:reset": "supabase db reset",
+    "supabase:seed": "supabase db seed"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.76.1",
     "framer-motion": "^12.23.24",
     "next": "16.0.0",
     "react": "19.2.0",
