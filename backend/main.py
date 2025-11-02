@@ -12,12 +12,20 @@ from datetime import datetime
 try:
     from database import db_connection
     from api.artwork_api import router as artwork_router
+    from api.artwork_embedding_api import router as artwork_embedding_router
+    from api.user_profile_api import router as user_profile_router
+    from api.room_upload_api import router as room_upload_router
+    from api.session_api import router as session_router
     DATABASE_AVAILABLE = True
 except ImportError as e:
     print(f"Warning: Database modules not available: {e}")
     DATABASE_AVAILABLE = False
     db_connection = None
     artwork_router = None
+    artwork_embedding_router = None
+    user_profile_router = None
+    room_upload_router = None
+    session_router = None
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -47,6 +55,30 @@ if DATABASE_AVAILABLE and artwork_router:
     logger.info("Artwork API router included")
 else:
     logger.warning("Artwork API router not available - using standalone mode")
+
+if DATABASE_AVAILABLE and artwork_embedding_router:
+    app.include_router(artwork_embedding_router)
+    logger.info("Artwork embedding API router included")
+else:
+    logger.warning("Artwork embedding API router not available - using standalone mode")
+
+if DATABASE_AVAILABLE and user_profile_router:
+    app.include_router(user_profile_router)
+    logger.info("User profile API router included")
+else:
+    logger.warning("User profile API router not available - using standalone mode")
+
+if DATABASE_AVAILABLE and room_upload_router:
+    app.include_router(room_upload_router)
+    logger.info("Room upload API router included")
+else:
+    logger.warning("Room upload API router not available - using standalone mode")
+
+if DATABASE_AVAILABLE and session_router:
+    app.include_router(session_router)
+    logger.info("Session API router included")
+else:
+    logger.warning("Session API router not available - using standalone mode")
 
 @app.on_event("startup")
 async def startup_event():

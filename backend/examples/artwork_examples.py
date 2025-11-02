@@ -1,6 +1,14 @@
 """
 Example usage of artwork CRUD operations
 """
+import os
+import sys
+
+# Ensure the backend root is on sys.path when running this file directly
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+BACKEND_ROOT = os.path.dirname(CURRENT_DIR)
+if BACKEND_ROOT not in sys.path:
+    sys.path.insert(0, BACKEND_ROOT)
 import asyncio
 import logging
 from decimal import Decimal
@@ -8,10 +16,45 @@ from uuid import uuid4
 
 from models.artwork import ArtworkCreate, ArtworkUpdate, ArtworkSearch
 from crud.artwork_crud import artwork_crud
+from database import db_connection
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+def check_database_connection():
+    """Check if database connection is available"""
+    try:
+        # Test the connection - this method returns True/False and logs errors
+        if db_connection.test_connection():
+            return True
+        else:
+            logger.error("\n" + "="*60)
+            logger.error("❌ Supabase is not running or not configured properly!")
+            logger.error("="*60)
+            logger.error("\nTo fix this:")
+            logger.error("1. Start Supabase locally: supabase start")
+            logger.error("2. Or configure your .env file with production Supabase credentials")
+            logger.error("   Example .env entries:")
+            logger.error("   SUPABASE_URL=https://your-project-ref.supabase.co")
+            logger.error("   SUPABASE_ANON_KEY=your-anon-key")
+            logger.error("3. Or use the direct_crud_demo.py which doesn't require a database")
+            logger.error("\n" + "="*60)
+            return False
+    except Exception as e:
+        logger.error(f"Database connection failed: {e}")
+        logger.error("\n" + "="*60)
+        logger.error("❌ Supabase is not running or not configured properly!")
+        logger.error("="*60)
+        logger.error("\nTo fix this:")
+        logger.error("1. Start Supabase locally: supabase start")
+        logger.error("2. Or configure your .env file with production Supabase credentials")
+        logger.error("   Example .env entries:")
+        logger.error("   SUPABASE_URL=https://your-project-ref.supabase.co")
+        logger.error("   SUPABASE_ANON_KEY=your-anon-key")
+        logger.error("3. Or use the direct_crud_demo.py which doesn't require a database")
+        logger.error("\n" + "="*60)
+        return False
 
 async def example_create_artwork():
     """Example: Create a new artwork"""
@@ -163,6 +206,11 @@ async def example_delete_artwork(artwork_id):
 async def run_all_examples():
     """Run all examples"""
     logger.info("Starting Artwork CRUD Examples...")
+    
+    # Check database connection first
+    if not check_database_connection():
+        logger.error("Cannot proceed without database connection. Exiting.")
+        return
     
     # Create artwork
     artwork = await example_create_artwork()

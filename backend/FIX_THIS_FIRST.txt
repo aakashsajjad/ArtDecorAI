@@ -1,0 +1,60 @@
+==============================================
+URGENT: FIX THE RLS ERROR - DO THIS NOW
+==============================================
+
+You have 2 options. Choose ONE:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OPTION 1: ADD SERVICE ROLE KEY (EASIEST)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Open this URL in your browser:
+   https://supabase.com/dashboard/project/zcgjlmdvztxakwubrjyg/settings/api
+
+2. Scroll down to "Project API keys"
+   
+3. Find the "service_role" key (it's the long one that starts with "eyJ")
+
+4. Click the "Copy" button next to it
+
+5. Open backend/.env in a text editor
+
+6. Add this line (replace with your actual key):
+   SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+7. Save the file
+
+8. Run: python test_add_record.py
+
+DONE! ✅
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OPTION 2: ADD SQL POLICY (IF YOU PREFER)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Open this URL in your browser:
+   https://supabase.com/dashboard/project/zcgjlmdvztxakwubrjyg/sql/new
+
+2. Copy this SQL and paste it:
+   
+   CREATE POLICY IF NOT EXISTS "Anyone can insert artwork" 
+       ON public.artwork FOR INSERT WITH CHECK (true);
+
+3. Click the "Run" button (or press Ctrl+Enter)
+
+4. Run: python test_add_record.py
+
+DONE! ✅
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WHICH ONE TO CHOOSE?
+- Option 1 = Faster, bypasses all RLS
+- Option 2 = More secure, keeps RLS enabled
+
+Both work perfectly! Just pick one and do it! 👍
+
+==============================================
+

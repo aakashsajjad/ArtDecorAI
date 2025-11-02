@@ -10,6 +10,7 @@ import logging
 
 from models.artwork import ArtworkCreate, ArtworkUpdate, ArtworkResponse, ArtworkSearch
 from crud.artwork_crud import artwork_crud
+from database import db_connection
 
 logger = logging.getLogger(__name__)
 
@@ -146,4 +147,24 @@ async def get_recent_artworks(
         return artworks
     except Exception as e:
         logger.error(f"Error getting recent artworks: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/sample", status_code=201)
+async def create_sample_artwork():
+    """Create a sample artwork using database.py method"""
+    try:
+        result = db_connection.add_sample_record()
+        if result.get("success"):
+            return {
+                "message": result.get("message"),
+                "artwork_id": result.get("artwork_id")
+            }
+        else:
+            raise HTTPException(
+                status_code=500, 
+                detail=result.get("error"),
+                headers={"X-Help": result.get("help", "")}
+            )
+    except Exception as e:
+        logger.error(f"Error creating sample artwork: {e}")
         raise HTTPException(status_code=500, detail=str(e))

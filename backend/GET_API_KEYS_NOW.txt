@@ -1,0 +1,51 @@
+==============================================
+🚨 YOUR API KEY IS INVALID - FIX THIS NOW
+==============================================
+
+ERROR: "Invalid API key" - The key in your .env is wrong or expired.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUICK FIX (2 minutes):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. OPEN THIS URL:
+   https://supabase.com/dashboard/project/zcgjlmdvztxakwubrjyg/settings/api
+
+2. YOU'LL SEE TWO KEYS:
+   ┌─────────────────────────────────────┐
+   │ anon / public key                   │ ← Copy this one
+   │ (long string starting with eyJ...)  │
+   └─────────────────────────────────────┘
+   
+   ┌─────────────────────────────────────┐
+   │ service_role (secret)                │ ← Or this one (better!)
+   │ (long string starting with eyJ...)   │
+   └─────────────────────────────────────┘
+
+3. EDIT backend/.env FILE:
+   - Open backend/.env in Notepad or any text editor
+   - REPLACE the old SUPABASE_ANON_KEY value
+   - OR add SUPABASE_SERVICE_ROLE_KEY with the service_role key
+
+4. SAVE THE FILE
+
+5. TEST AGAIN:
+   python test_add_record.py
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WHAT YOUR .env SHOULD LOOK LIKE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SUPABASE_URL=https://zcgjlmdvztxakwubrjyg.supabase.co
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...YOUR_KEY_HERE
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...YOUR_KEY_HERE
+
+(Replace ...YOUR_KEY_HERE with the actual full key from Supabase)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  The hardcoded fallback key in database.py is also invalid.
+   You MUST add the correct key to .env file!
+
+==============================================
+

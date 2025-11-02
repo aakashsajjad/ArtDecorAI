@@ -1,6 +1,7 @@
 """
 CRUD operations for artwork table
 """
+from database import db_connection
 from typing import List, Optional, Dict, Any
 from uuid import UUID
 from decimal import Decimal
@@ -19,11 +20,24 @@ class ArtworkCRUD:
         self.db = db_connection.client
         self.table_name = "artwork"
     
+    @staticmethod
+    def _convert_decimals_to_primitives(value: Any) -> Any:
+        """Recursively convert Decimal values to float so payload is JSON serializable."""
+        if isinstance(value, Decimal):
+            return float(value)
+        if isinstance(value, list):
+            return [ArtworkCRUD._convert_decimals_to_primitives(item) for item in value]
+        if isinstance(value, dict):
+            return {k: ArtworkCRUD._convert_decimals_to_primitives(v) for k, v in value.items()}
+        return value
+    
     async def create_artwork(self, artwork: ArtworkCreate) -> ArtworkResponse:
         """Create a new artwork"""
         try:
             # Convert Pydantic model to dict
             artwork_data = artwork.model_dump()
+            # Ensure all Decimal values are JSON serializable
+            artwork_data = self._convert_decimals_to_primitives(artwork_data)
             
             # Insert into database
             result = self.db.table(self.table_name).insert(artwork_data).execute()
